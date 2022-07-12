@@ -81,7 +81,9 @@ jobs:
     steps:
       - name: Generate matrix
         id: generate-matrix
-        uses: silverstripe/gha-generate-matrix@v1
+        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        uses: creative-commoners/gha-generate-matrix@pulls/1.1/minimum-php-version
+        # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         with:
           extra_jobs: ${{ inputs.extra_jobs }}
           simple_matrix: ${{ inputs.simple_matrix }}
