@@ -149,8 +149,8 @@ jobs:
         uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # v2.19.1
         with:
           php-version: ${{ matrix.php }}
-          extensions: curl, dom, gd, intl, json, ldap, mbstring, mysql, tidy, xdebug, zip
-          tools: composer:v2
+          extensions: blackfire, curl, dom, gd, intl, json, ldap, mbstring, mysql, tidy, xdebug, zip
+          tools: composer:v2, blackfire, blackfire-player
           coverage: xdebug
           # While this should be the correct way to allow forks in composer.json repositories
           # in practice there are still many sporadic "Could not authenticate against github.com" errors
@@ -507,6 +507,13 @@ jobs:
           fi
 
       - name: Final preparation
+        env:
+          # Expose your Blackfire credentials stored in secrets
+          # as environment variables.
+          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
         run: |
           # Add .env file and create artifacts directory
           # Note: the wonky indentation is intentional so there is no space at the start of
@@ -559,11 +566,11 @@ jobs:
           # run dev/build flush to help debug any issues (though it's not strictly required here)
           # normal module
           if [[ -f vendor/bin/sake ]]; then
-            vendor/bin/sake dev/build flush=1
+            blackfire run php vendor/bin/sake dev/build flush=1
           fi
           # framework module
           if [[ -f sake ]]; then
-            ./sake dev/build flush=1
+            blackfire run php ./sake dev/build flush=1
           fi
 
           # Delete the silverstripe-cache dir - it will automatically recreate when needed
@@ -577,7 +584,7 @@ jobs:
           echo "matrix.phpunit: ${{ matrix.phpunit }}"
 
       - name: Run tests
-        uses: silverstripe/gha-run-tests@v1
+        uses: creative-commoners/gha-run-tests@pulls/1/poc-blackfire
         with:
           phpunit: ${{ matrix.phpunit }}
           phpunit_suite: ${{ matrix.phpunit_suite }}
