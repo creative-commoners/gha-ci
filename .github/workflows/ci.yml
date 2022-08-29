@@ -158,6 +158,13 @@ jobs:
           # fairly easily when using a fork with multiple jobs in a matrix
           #env:
           # COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          # Expose your Blackfire credentials stored in secrets
+          # as environment variables.
+          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
 
       - name: Configure PHP
         run: |
@@ -507,13 +514,6 @@ jobs:
           fi
 
       - name: Final preparation
-        env:
-          # Expose your Blackfire credentials stored in secrets
-          # as environment variables.
-          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
-          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
-          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
         run: |
           # Add .env file and create artifacts directory
           # Note: the wonky indentation is intentional so there is no space at the start of
