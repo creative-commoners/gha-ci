@@ -142,7 +142,7 @@ jobs:
       BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
       BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
       BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-      TEST_VALUE_ONE: ${{ secrets.MY_TEST_SECRET }}
+      TEST_VALUE_ONE: "some string value"
 
     name: ${{ matrix.name }}
 
