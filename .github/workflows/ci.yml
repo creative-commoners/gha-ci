@@ -136,6 +136,12 @@ jobs:
 
     env:
       artifacts_name: ${{ matrix.name }}
+      # Expose your Blackfire credentials stored in secrets
+      # as environment variables.
+      BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
+      BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
+      BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
+      BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
 
     name: ${{ matrix.name }}
 
@@ -149,22 +155,15 @@ jobs:
         uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # v2.19.1
         with:
           php-version: ${{ matrix.php }}
-          extensions: blackfire, curl, dom, gd, intl, json, ldap, mbstring, mysql, tidy, xdebug, zip
+          extensions: blackfire, curl, dom, gd, intl, json, ldap, mbstring, mysql, tidy, :xdebug, zip
           tools: composer:v2, blackfire, blackfire-player
-          coverage: xdebug
+          coverage: none
           # While this should be the correct way to allow forks in composer.json repositories
           # in practice there are still many sporadic "Could not authenticate against github.com" errors
           # there's 1,000 requests per hour limit when using this token, likely it get exceeded
           # fairly easily when using a fork with multiple jobs in a matrix
           #env:
           # COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          # Expose your Blackfire credentials stored in secrets
-          # as environment variables.
-          BLACKFIRE_SERVER_ID: ${{ secrets.BLACKFIRE_SERVER_ID }}
-          BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-          BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
-          BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
 
       - name: Configure PHP
         run: |
