@@ -142,7 +142,7 @@ jobs:
       BLACKFIRE_SERVER_TOKEN: ${{ secrets.BLACKFIRE_SERVER_TOKEN }}
       BLACKFIRE_CLIENT_ID: ${{ secrets.BLACKFIRE_CLIENT_ID }}
       BLACKFIRE_CLIENT_TOKEN: ${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-      TEST_VALUE_ONE: "some string value"
+      TEST_VALUE_ONE: "${{ secrets.MY_TEST_SECRET }}"
 
     name: ${{ matrix.name }}
 
@@ -563,18 +563,14 @@ jobs:
           # composer install does actually remove the artifact directory
           mkdir artifacts
 
-          echo "from ENV: $TEST_VALUE_ONE"
-          echo "from ENV var: ${{ env.TEST_VALUE_ONE }}"
-          echo "from raw secret: ${{ secrets.MY_TEST_SECRET }}"
-
           # run dev/build flush to help debug any issues (though it's not strictly required here)
           # normal module
           if [[ -f vendor/bin/sake ]]; then
-            blackfire run php vendor/bin/sake dev/build flush=1
+            blackfire run --client-id ${{ secrets.BLACKFIRE_CLIENT_ID }} --client-token ${{ secrets.BLACKFIRE_CLIENT_TOKEN }} php vendor/bin/sake dev/build flush=1
           fi
           # framework module
           if [[ -f sake ]]; then
-            blackfire run php ./sake dev/build flush=1
+            blackfire run --client-id ${{ secrets.BLACKFIRE_CLIENT_ID }} --client-token ${{ secrets.BLACKFIRE_CLIENT_TOKEN }} php ./sake dev/build flush=1
           fi
 
           # Delete the silverstripe-cache dir - it will automatically recreate when needed
