@@ -4,6 +4,14 @@ on:
     secrets:
       BLACKFIRE_ENV:
         required: true
+      BLACKFIRE_SERVER_ID:
+        required: true
+      BLACKFIRE_SERVER_TOKEN:
+        required: true
+      BLACKFIRE_CLIENT_ID:
+        required: true
+      BLACKFIRE_CLIENT_TOKEN:
+        required: true
     inputs:
       # extra jobs must be multi-line string, as there's no support for `type: array` for inputs
       extra_jobs:
@@ -589,7 +597,7 @@ jobs:
           echo "matrix.phpunit: ${{ matrix.phpunit }}"
 
       - name: Run tests
-        uses: creative-commoners/gha-run-tests@pulls/1/poc-blackfire
+        uses: silverstripe/gha-run-tests@v1
         with:
           phpunit: ${{ matrix.phpunit }}
           phpunit_suite: ${{ matrix.phpunit_suite }}
