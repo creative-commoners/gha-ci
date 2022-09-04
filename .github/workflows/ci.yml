@@ -1,6 +1,9 @@
 name: CI
 on:
   workflow_call:
+    secrets:
+      BLACKFIRE_ENV:
+        required: true
     inputs:
       # extra jobs must be multi-line string, as there's no support for `type: array` for inputs
       extra_jobs:
@@ -563,23 +566,16 @@ jobs:
           # composer install does actually remove the artifact directory
           mkdir artifacts
 
-          # Configure blackfire
-          # According to https://blackfire.io/docs/integrations/ci/github-actions we shouldn't need this step because we use environment variables
-          # but the env vars just aren't working - it complains that it's not configured.
-          blackfire agent:config --server-id=${{ secrets.BLACKFIRE_SERVER_ID }} --server-token=${{ secrets.BLACKFIRE_SERVER_TOKEN }}
-          systemctl restart blackfire-agent
-          blackfire client:config --client-id=${{ secrets.BLACKFIRE_CLIENT_ID }} --client-token=${{ secrets.BLACKFIRE_CLIENT_TOKEN }}
-
           # run dev/build flush to help debug any issues (though it's not strictly required here)
           # normal module
           if [[ -f vendor/bin/sake ]]; then
             echo "Attempting to run dev/build"
-            blackfire run php vendor/bin/sake dev/build flush=1
+            blackfire run --env=${{ secrets.BLACKFIRE_ENV }} php vendor/bin/sake dev/build flush=1
           fi
           # framework module
           if [[ -f sake ]]; then
             echo "Attempting to run dev/build"
-            blackfire run php ./sake dev/build flush=1
+            blackfire run --env=${{ secrets.BLACKFIRE_ENV }} php ./sake dev/build flush=1
           fi
 
           # Delete the silverstripe-cache dir - it will automatically recreate when needed
