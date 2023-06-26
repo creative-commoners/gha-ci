@@ -1,3 +1,5 @@
+This is just a test
+
 # GitHub Actions - CI
 
 CI for Silverstripe modules
